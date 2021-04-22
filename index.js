@@ -1,9 +1,13 @@
 const express = require('express'), app = express();
+const bodyParser = require('body-parser');
 const APP_PORT = process.env.PORT || 3000;
+
 
 const path = require('path');
 
 const Database = require('./database.js');
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', async (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
@@ -39,18 +43,17 @@ app.get('/database/:database/:key', async (req, res) => {
   res.json(obj);
 });
 app.get('/database/:database/:key/set', async (req, res) => {
-  res.json({err: new Error("Não é possível dar GET nessa página.").message})
-});
-/*app.post('/database/:database/:key/set', async (req, res) => {
   const {database, key} = req.params;
   const db = await Database(database);
 
-  console.log(req);
+  const {value} = req.query;
 
-  var obj = await db.set(key, false);
+  var obj = await db.set(key, JSON.parse(value) || false);
+
+  console.dir(obj);
 
   res.json(obj);
-});*/
+});
 
 app.listen(APP_PORT || 3000, () => {
   console.log(`Servidor iniciado na porta ${APP_PORT}`);
