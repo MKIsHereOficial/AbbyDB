@@ -2,7 +2,6 @@ const express = require('express'), app = express();
 const bodyParser = require('body-parser');
 const APP_PORT = process.env.PORT || 3000;
 
-
 const path = require('path');
 
 const Database = require('./database.js');
@@ -10,6 +9,20 @@ const Database = require('./database.js');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', async (req, res) => {
+  const db = await Database('chars');
+
+  /*await db.set('765002665041068033', {
+  "name": "Ally Blossom G.",
+  "id": "765002665041068033",
+  "avatar": false,
+  "attrs": [
+    {name: 'Força', value: 0}, {name: 'Destreza', value: 0}, {name: 'Inteligência', value: 0}, {name: 'Tamanho', value: 0}, {name: 'Constituição', value: 0}, {name: 'Educação', value: 0}, {name: 'Movimento', value: 0}, {name: 'Aparência', value: 0}
+  ],
+  "inventory": [
+    {name: 'Lanterna', quantity: 1}
+  ]
+  });*/
+
   res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 

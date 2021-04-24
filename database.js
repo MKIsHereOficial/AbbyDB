@@ -52,7 +52,7 @@ async function main(databaseName = "default".toLowerCase()) {
 
     obj.value = value;
     if (await fs.existsSync(keyPath)) {
-      await fs.writeFileSync(keyPath, JSON.stringify({key, value}, null, 1));
+      await fs.writeFileSync(keyPath, JSON.stringify({key, value}, null, 2));
     }
     
     return obj;
