@@ -70,7 +70,7 @@ async function main(databaseName = "default".toLowerCase()) {
     return {key, excluded: true};
   }
 
-  async function get(key = "", fallback) {
+  async function get(key = "", fallback = null) {
     const keyPath = path.join(database.path, `${key}.json`);
 
     const docRef = (await fs.existsSync(keyPath)) ? await fs.readFileSync(keyPath, 'utf-8') : false;
@@ -122,8 +122,8 @@ async function main(databaseName = "default".toLowerCase()) {
     var obj = {key, path: keyPath};
 
     if (await fs.existsSync(keyPath)) {
-      obj.exists = true;
       obj = await get(key, true);
+      obj.exists = true;
     } else {
       obj.exists = false;
     }

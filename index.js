@@ -54,6 +54,16 @@ app.get('/database/:database/:key/set', async (req, res) => {
 
   res.json(obj);
 });
+app.get('/database/:database/:key/exists', async (req, res) => {
+  const {database, key} = req.params;
+  const db = await Database(database);
+
+  var obj = await db.exists(key);
+
+  console.dir(obj);
+
+  res.json(obj);
+});
 
 app.listen(APP_PORT || 3000, () => {
   console.log(`Servidor iniciado na porta ${APP_PORT}`);
