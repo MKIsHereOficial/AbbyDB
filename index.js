@@ -11,17 +11,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', async (req, res) => {
   const db = await Database('chars');
 
-  /*await db.set('765002665041068033', {
-  "name": "Ally Blossom G.",
-  "id": "765002665041068033",
-  "avatar": false,
-  "attrs": [
-    {name: 'Força', value: 0}, {name: 'Destreza', value: 0}, {name: 'Inteligência', value: 0}, {name: 'Tamanho', value: 0}, {name: 'Constituição', value: 0}, {name: 'Educação', value: 0}, {name: 'Movimento', value: 0}, {name: 'Aparência', value: 0}
-  ],
-  "inventory": [
-    {name: 'Lanterna', quantity: 1}
-  ]
-  });*/
+  if (true) {
+    await db.set('765002665041068033', {
+      "name": "Ally Blossom G.",
+      "id": "765002665041068033",
+      "avatar": false,
+      "attrs": [
+        { name: 'Força', value: 0 }, { name: 'Destreza', value: 0 }, { name: 'Inteligência', value: 0 }, { name: 'Tamanho', value: 0 }, { name: 'Constituição', value: 0 }, { name: 'Educação', value: 0 }, { name: 'Movimento', value: 0 }, { name: 'Aparência', value: 0 }
+      ],
+      "inventory": [
+        { name: 'Lanterna', quantity: 1, givenBy: '475072755033702400' }
+      ]
+    });
+  }
+
 
   res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
@@ -31,21 +34,21 @@ app.get('/database', async (req, res) => {
   res.json(await Database(dbName));
 });
 app.get('/database/:database', async (req, res) => {
-  const {database} = req.params;
+  const { database } = req.params;
   const db = await Database(database);
 
   res.json(db);
 });
 app.get('/database/:database/all', async (req, res) => {
-  const {database} = req.params;
+  const { database } = req.params;
   const db = await Database(database);
 
   console.dir(await db.getAll());
 
-  res.json({all: await db.getAll(), db});
+  res.json({ all: await db.getAll(), db });
 });
 app.get('/database/:database/:key', async (req, res) => {
-  const {database, key} = req.params;
+  const { database, key } = req.params;
   const db = await Database(database);
 
   var obj = await db.exists(key);
@@ -56,10 +59,10 @@ app.get('/database/:database/:key', async (req, res) => {
   res.json(obj);
 });
 app.get('/database/:database/:key/set', async (req, res) => {
-  const {database, key} = req.params;
+  const { database, key } = req.params;
   const db = await Database(database);
 
-  const {value} = req.query;
+  const { value } = req.query;
 
   var obj = await db.set(key, JSON.parse(value) || false);
 
@@ -68,7 +71,7 @@ app.get('/database/:database/:key/set', async (req, res) => {
   res.json(obj);
 });
 app.get('/database/:database/:key/exists', async (req, res) => {
-  const {database, key} = req.params;
+  const { database, key } = req.params;
   const db = await Database(database);
 
   var obj = await db.exists(key);

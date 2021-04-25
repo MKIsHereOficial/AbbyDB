@@ -41,7 +41,8 @@
     "inventory": [
       {
         "name": "Lanterna",
-        "quantity": 1
+        "quantity": 1,
+        "givenBy": "475072755033702400"
       }
     ]
   }
