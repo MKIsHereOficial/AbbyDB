@@ -62,6 +62,8 @@ async function main(databaseName = "default".toLowerCase()) {
     const keyPath = path.join(database.path, `${key}.json`);
 
     if (await fs.existsSync(keyPath)) {
+      console.dir(keyPath);
+      await set(key, null);
       await fs.unlinkSync(keyPath);
     } else {
       return {err: new Error("O Documento/Key não existe, então não pode ser excluído.")};
