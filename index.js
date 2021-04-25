@@ -49,33 +49,63 @@ app.get('/database/:database/all', async (req, res) => {
 });
 app.get('/database/:database/:key', async (req, res) => {
   const { database, key } = req.params;
+
+  if (!database) return res.json({err: 'Nenhum valor DatabaseName (?database) foi entregue.'});
+  if (!key) return res.json({err: 'Nenhuma chave (?key) foi entregue. Não há documento sem chave.'});
+
+
   const db = await Database(database);
 
   var obj = await db.exists(key);
   obj = (obj.exists != false) ? await db.get(key) : false;
 
-  if (!obj) obj = await db.set(key, key);
+  if (!obj && req.query['createIfNull']) obj = await db.set(key, key);
 
   res.json(obj);
 });
 app.get('/database/:database/:key/set', async (req, res) => {
   const { database, key } = req.params;
-  const db = await Database(database);
+
+  if (!database) return res.json({err: 'Nenhum valor DatabaseName (?database) foi entregue.'});
+  if (!key) return res.json({err: 'Nenhuma chave (?key) foi entregue. Não há documento sem chave.'});
+
+  const db = await Database(database.toLowerCase());
 
   const { value } = req.query;
 
-  var obj = await db.set(key, JSON.parse(value) || false);
+  var obj = await db.set(key, (value.startsWith("{") && value.endsWith("}")) ? JSON.parse(value) : value || false);
 
-  console.dir(obj);
+  console.log(`[database/${database.toLowerCase()}/${key}]`, `O Documento foi setado com o valor ${(value.startsWith("{") && value.endsWith("}")) ? JSON.parse(value) : value}.`);
 
   res.json(obj);
 });
 app.get('/database/:database/:key/exists', async (req, res) => {
   const { database, key } = req.params;
+  
+  if (!database) return res.json({err: 'Nenhum valor DatabaseName (?database) foi entregue.'});
+  if (!key) return res.json({err: 'Nenhuma chave (?key) foi entregue. Não há documento sem chave.'});
+
   const db = await Database(database);
 
   var obj = await db.exists(key);
 
+  console.dir(obj);
+
+  res.json(obj);
+});
+app.get('/database/:database/:key/del', async (req, res) => {
+  const { database, key } = req.params;
+  
+  if (!database) return res.json({err: 'Nenhum valor DatabaseName (?database) foi entregue.'});
+  if (!key) return res.json({err: 'Nenhuma chave (?key) foi entregue. Não há documento sem chave.'});
+
+  const db = await Database(database);
+
+  if ("err" in await db.get(key)) return res.json({err: "Este Documento não existe."});
+
+  var obj = await db.delete(key);
+
+  console.log(`[database/${database.toLowerCase()}/${key}]`, `O Documento foi deletado.`);
   console.dir(obj);
 
   res.json(obj);
